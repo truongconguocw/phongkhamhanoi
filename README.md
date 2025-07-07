@@ -67,6 +67,7 @@ Dự án được tổ chức theo mô hình MVC (Model-View-Controller) để �
 3.  **Cấu hình môi trường**
     -   Tạo một file `database.php` trong thư mục gốc của dự án bằng cách sao chép từ file `database.php` hoặc tạo mới.
     -   Cấu hình thông tin kết nối cơ sở dữ liệu trong file `database.php`:
+    ```
         DB_HOST=localhost
         DB_PORT=3306
         DB_DATABASE=doan1
@@ -86,14 +87,14 @@ Dự án được tổ chức theo mô hình MVC (Model-View-Controller) để �
     ````bash
     php -S localhost:8000 -t public
     ````
-    ***Cách 2: Sử dụng máy chủ web như Apache hoặc Nginx**
+    ***Cách 2: Sử dụng máy chủ web như Apache hoặc Nginx***
     Đối với môi trường production hoặc nếu bạn đang dùng các công cụ như XAMPP, WAMP, hãy cấu hình máy chủ web của bạn:
     -   Document Root: Trỏ Document Root (thư mục gốc) của virtual host đến thư mục `public` của dự án.
     -   URL Rewriting: Đảm bảo đã bật mod_rewrite (đối với Apache) để các URL thân thiện của ứng dụng hoạt động chính xác. File `.htaccess` trong thư mục `public` đã được cấu hình sẵn cho việc này.
 
 
 6.  **Truy cập ứng dụng**
-    -   Mở trình duyệt và truy cập vào địa chỉ web của bạn (ví dụ: `http://localhost/phongkhamhanoi/`).
+    -   Mở trình duyệt và truy cập vào địa chỉ web của bạn (ví dụ: `http://localhost:8000/phongkhamhanoi/`).
 
 ## V. Tài khoản đăng nhập mẫu
 
