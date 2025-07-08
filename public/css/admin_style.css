@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* --- BIẾN MÀU VÀ FONT CHỮ --- */
+:root {
+    --primary: #2C3E50;
+    --accent1: #3498DB;
+    --accent2: #5DADE2;
+    --background: #F8F9FA;
+    --text-light: #ECF0F1;
+    --text-dark: #34495E;
+    --border-color: #EAECEE;
+}
+
+/* --- THIẾT LẬP CƠ BẢN --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+#page-content-wrapper {
+    padding: 1.5rem 2rem;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+}
+
+.page-header {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- CARD CHUNG --- */
+.card {
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    transform: translateY(-3px);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* --- DASHBOARD STAT CARDS --- */
+.stat-card {
+    color: var(--text-light);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    position: relative;
+    border: none;
+}
+
+.stat-card .card-body {
+    position: relative;
+    z-index: 2;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 60%);
+    z-index: 1;
+}
+
+.stat-card .stat-icon {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 4rem;
+    opacity: 0.2;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    opacity: 0.3;
+    transform: translateY(-50%) scale(1.1) rotate(-5deg);
+}
+
+.stat-card .text-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.stat-card .text-label {
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.bg-card-pending {
+    background-color: #3498DB;
+}
+
+.bg-card-completed {
+    background-color: #27AE60;
+}
+
+.bg-card-doctors {
+    background-color: #8E44AD;
+}
+
+.bg-card-patients {
+    background-color: #E67E22;
+}
+
+/* --- TABLE STYLES --- */
+.table-responsive {
+    border-radius: 0 0 0.75rem 0.75rem;
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    font-weight: 600;
+    color: var(--text-dark);
+    background-color: #F8F9FA;
+    border: none;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+/* --- STATUS BADGES  --- */
+.badge {
+    padding: 0.4em 0.8em;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-confirmed {
+    background-color: #e8f4fd !important;
+    color: #3498db !important;
+}
+
+.status-completed {
+    background-color: #eaf7ec !important;
+    color: #27ae60 !important;
+}
+
+.status-cancelled {
+    background-color: #fbebeb !important;
+    color: #e74c3c !important;
+}
+
+.status-pending {
+    background-color: #fef8e5 !important;
+    color: #f39c12 !important;
+}
+
+.status-default {
+    background-color: #f4f6f7 !important;
+    color: #7f8c8d !important;
+}
+
+/* --- WIDGETS --- */
+.list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+#appointmentChart,
+#serviceUsageChart {
+    max-height: 320px;
+}
+
+/* --- SIDEBAR --- */
+#sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 1030;
+}
+
+.sidebar-heading {
+    padding: 1.25rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    transition: padding 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar-heading .sidebar-text-short {
+    display: none;
+}
+
+.list-group {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.list-group-item-action {
+    background-color: transparent;
+    border: none;
+    color: rgba(236, 240, 241, 0.7);
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    border-left-color: var(--accent2);
+}
+
+.list-group-item-action.active {
+    background-color: var(--accent1);
+    color: var(--text-light);
+    font-weight: 700;
+    border-left-color: var(--accent2);
+}
+
+.sidebar-footer {
+    padding: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+#sidebarToggle {
+    color: rgba(236, 240, 241, 0.7);
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+}
+
+#sidebarToggle:hover {
+    color: var(--text-light);
+}
+
+#sidebarToggle .fa-angle-left {
+    transition: transform 0.3s ease;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper {
+    width: 80px;
+}
+
+body.sb-sidenav-toggled #page-content-wrapper {
+    margin-left: 80px;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper .sidebar-text,
+body.sb-sidenav-toggled #sidebar-wrapper .sidebar-text-full {
+    display: none;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper .list-group-item-action {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper .list-group-item-action .fa-fw {
+    margin-right: 0 !important;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper .sidebar-heading {
+    text-align: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+body.sb-sidenav-toggled #sidebar-wrapper .sidebar-heading .sidebar-text-short {
+    display: inline;
+}
+
+body.sb-sidenav-toggled #sidebarToggle .fa-angle-left {
+    transform: rotate(180deg);
+}

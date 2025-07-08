@@ -7,6 +7,7 @@ use PDO;
 class User extends BaseModel
 {
     protected string $table = 'nguoidung';
+    protected string $primaryKey = 'UserID';
 
     /**
      * Tìm một người dùng dựa trên địa chỉ email.

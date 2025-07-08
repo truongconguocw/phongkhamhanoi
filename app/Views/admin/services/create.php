@@ -1,5 +1,5 @@
 <div class="card shadow-sm">
-    <div class="card-header"><h4 class="mb-0">Thêm Dịch vụ mới</h4></div>
+    <div class="card-header"><h4 class="mb-0">Thông tin dịch vụ mới</h4></div>
     <div class="card-body">
         <form action="/admin/services" method="POST">
             <div class="mb-3">

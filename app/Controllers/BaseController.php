@@ -59,7 +59,7 @@ abstract class BaseController
 
     /**
      * Trả về phản hồi dưới dạng JSON.
-     * Hữu ích cho các yêu cầu API hoặc AJAX.
+     * Hữu ích cho các yêu cầu API, AJAX.
      *
      * @param array $data Dữ liệu cần chuyển thành JSON.
      * @param int $statusCode Mã trạng thái HTTP (mặc định là 200 OK).

@@ -7,7 +7,7 @@ use App\Models\Appointment;
 use App\Models\Patient;
 class DoctorController extends BaseController
 {
-     /**
+    /**
      * Hiển thị trang dashboard chính của bác sĩ.
      */
     public function dashboard()
@@ -18,16 +18,44 @@ class DoctorController extends BaseController
 
         $doctorModel = new Doctor();
         $doctorInfo = $doctorModel->findByUserId($_SESSION['user']['UserID']);
+        $doctorId = $doctorInfo['BacSiID'];
         
         $appointmentModel = new Appointment();
-        // Lấy các lịch hẹn cho ngày hôm nay
         $today = date('Y-m-d');
-        $appointments = $appointmentModel->getAppointmentsForDoctorByDate($doctorInfo['BacSiID'], $today);
+        // Lấy tất cả lịch hẹn trong ngày của bác sĩ, kèm thông tin bệnh nhân
+        $appointments = $appointmentModel->getAppointmentsForDoctorByDate($doctorId, $today, true);
+
+        // Tính toán các chỉ số thống kê
+        $stats = [
+            'total' => count($appointments),
+            'completed' => 0,
+            'pending_confirmation' => 0,
+        ];
+        $upcomingAppointments = [];
+
+        foreach ($appointments as $apt) {
+            if ($apt['TrangThai'] === 'DaHoanThanh') {
+                $stats['completed']++;
+            }
+            if ($apt['TrangThai'] === 'ChoXacNhan') {
+                $stats['pending_confirmation']++;
+            }
+            // Lọc ra những lịch hẹn chưa hoàn thành hoặc hủy
+            if (!in_array($apt['TrangThai'], ['DaHoanThanh', 'DaHuy'])) {
+                $upcomingAppointments[] = $apt;
+            }
+        }
+        
+        // Tìm bệnh nhân tiếp theo (người đầu tiên trong danh sách sắp tới)
+        $nextPatient = !empty($upcomingAppointments) ? $upcomingAppointments[0] : null;
 
         $this->render('dashboards/doctor', [
             'title' => 'Bảng điều khiển',
-            'appointments' => $appointments,
-            'user' => $_SESSION['user']
+            'user' => $_SESSION['user'],
+            'stats' => $stats,
+            'appointments' => $appointments, // Gửi toàn bộ lịch hẹn trong ngày
+            'nextPatient' => $nextPatient,
+            'upcomingAppointments' => $upcomingAppointments
         ], 'doctor_layout');
     }
     /**
@@ -42,7 +70,6 @@ class DoctorController extends BaseController
         $doctorModel = new Doctor();
         $doctorInfo = $doctorModel->findByUserId($_SESSION['user']['UserID']);
         $doctorId = $doctorInfo['BacSiID'];
-
         $scheduleModel = new WorkSchedule();
         $schedulesFromDb = $scheduleModel->findByDoctorId($doctorId);
 
@@ -62,6 +89,7 @@ class DoctorController extends BaseController
             'schedules' => $formattedSchedules
         ], 'doctor_layout');
     }
+
     /**
      * Lưu lịch làm việc từ form.
      */
@@ -74,7 +102,6 @@ class DoctorController extends BaseController
         $doctorModel = new Doctor();
         $doctorInfo = $doctorModel->findByUserId($_SESSION['user']['UserID']);
         $doctorId = $doctorInfo['BacSiID'];
-
         $postedData = $_POST['schedules'] ?? [];
         $newSchedules = [];
 
@@ -117,9 +144,11 @@ class DoctorController extends BaseController
 
         $doctorModel = new Doctor();
         $doctorInfo = $doctorModel->findByUserId($_SESSION['user']['UserID']);
-        
+        $doctorId = $doctorInfo['BacSiID'];
+        $status = $_GET['status'] ?? null;
         $appointmentModel = new Appointment();
         $appointments = $appointmentModel->findByDoctorId($doctorInfo['BacSiID']);
+        $appointments = $appointmentModel->getAppointmentsForDoctor($doctorId, $status);
 
         $this->render('doctors/appointments', [
             'title' => 'Quản lý Lịch hẹn',

@@ -1,21 +1,37 @@
 <div class="card shadow-sm">
     <div class="card-header">
-        <h4 class="mb-0">Thêm Chuyên khoa mới</h4>
+        <h5 class="mb-0 fw-bold">Nhập thông tin Chuyên khoa mới</h5>
     </div>
-    <div class="card-body">
-        <form action="/admin/specialties" method="POST">
+    <div class="card-body p-4">
+        <form action="/admin/specialties/store" method="POST">
             <div class="mb-3">
-                <label for="TenChuyenKhoa" class="form-label">Tên Chuyên khoa</label>
+                <label for="TenChuyenKhoa" class="form-label">Tên Chuyên khoa <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="TenChuyenKhoa" name="TenChuyenKhoa" required>
             </div>
             <div class="mb-3">
                 <label for="MoTa" class="form-label">Mô tả</label>
-                <textarea class="form-control" id="MoTa" name="MoTa" rows="4"></textarea>
+                <textarea class="form-control" id="MoTa" name="MoTa" rows="4" placeholder="Mô tả ngắn về chuyên khoa..."></textarea>
             </div>
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end mt-4">
                 <a href="/admin/specialties" class="btn btn-secondary me-2">Hủy</a>
-                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="submit" class="btn btn-primary">Lưu Chuyên khoa</button>
             </div>
         </form>
     </div>
 </div>
+
+<style>
+    .card {
+        border: 1px solid #EAECEE;
+        border-radius: 0.75rem;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #EAECEE;
+        padding: 1rem 1.5rem;
+        color: #2C3E50;
+    }
+    .form-label {
+        font-weight: 500;
+    }
+</style>

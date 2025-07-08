@@ -22,6 +22,7 @@ $router->post('doctor/schedule', 'DoctorController@saveSchedule'); // Lưu lịc
 $router->get('doctor/appointments', 'DoctorController@listAppointments'); // Hiển thị danh sách các lịch hẹn trong ngày của bác sĩ
 $router->get('doctor/patients', 'DoctorController@listPatients'); // Hiển thị danh sách bệnh nhân đã từng khám bởi bác sĩ
 $router->get('doctor/dashboard', 'DoctorController@dashboard');
+$router->get('doctor/patients/{id}/history', 'PatientController@showHistoryForDoctor');
 
 // === Routes Đăng ký người dùng mới ===
 $router->get('register', 'AuthController@showRegisterForm'); // Hiển thị form đăng ký người dùng mới
@@ -60,6 +61,9 @@ $router->get('admin/dashboard', 'Admin\AdminController@dashboard');
 $router->get('admin/doctors', 'Admin\DoctorController@index');
 $router->get('admin/doctors/create', 'Admin\DoctorController@create'); // Route hiển thị form
 $router->post('admin/doctors/store', 'Admin\DoctorController@store');  // Route xử lý form
+$router->get('admin/doctors/{id}/edit', 'Admin\DoctorController@edit'); 
+$router->post('admin/doctors/{id}/update', 'Admin\DoctorController@update'); 
+$router->post('admin/doctors/{id}/delete', 'Admin\DoctorController@destroy');
 $router->get('admin/patients', 'Admin\PatientController@index'); // Route hiển thị danh sách bệnh nhân
 $router->get('admin/patients/{id}', 'Admin\PatientController@show'); // Route hiển thị chi tiết bệnh nhân
 $router->get('admin/appointments', 'Admin\AppointmentController@index'); // Route hiển thị danh sách lịch hẹn

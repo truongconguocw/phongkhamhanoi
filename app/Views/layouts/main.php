@@ -1,8 +1,6 @@
 <?php
 /**
  * Đây là file layout chính của ứng dụng.
- * Mọi view khác sẽ được "nhúng" vào trong layout này.
- * Nó chứa các thành phần chung như header, footer, và các thẻ <head> cơ bản.
  */
 ?>
 <!DOCTYPE html>
@@ -33,7 +31,7 @@
     <main class="container my-4" style="min-height: 70vh;">
         <?php
         // Biến $content sẽ chứa HTML của view cụ thể (ví dụ: login.php, profile.php)
-        // Được truyền vào từ BaseController hoặc Router.
+        // Được truyền vào từ BaseController.
         echo $content ?? ''; 
         ?>
     </main>

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use PDO;
 
 class Appointment extends BaseModel
@@ -10,29 +8,33 @@ class Appointment extends BaseModel
     protected string $primaryKey = 'LichKhamID';
 
     /**
-     * Lấy tất cả lịch hẹn của một bác sĩ trong một ngày cụ thể.
-     * @param int $doctorId ID của bác sĩ.
-     * @param string $date Ngày theo định dạng 'Y-m-d'.
-     * @return array Danh sách các lịch hẹn.
+     * Lấy danh sách lịch hẹn cho một bác sĩ vào một ngày cụ thể.
+     * @param int $doctorId
+     * @param string $date (YYYY-MM-DD)
+     * @param bool $withPatientDetails
+     * @return array
      */
-    public function getAppointmentsForDoctorByDate(int $doctorId, string $date): array
+    public function getAppointmentsForDoctorByDate(int $doctorId, string $date, bool $withPatientDetails = false): array
     {
-        $sql = "
-            SELECT 
-                lk.LichKhamID,
-                lk.ThoiGianKham,
-                lk.LyDoKham,
-                lk.TrangThai,
-                bn.HoTen AS TenBenhNhan,
-                bn.NgaySinh AS NgaySinhBenhNhan,
-                bn.GioiTinh AS GioiTinhBenhNhan
-            FROM {$this->table} lk
-            JOIN benhnhan bn ON lk.BenhNhanID = bn.BenhNhanID
-            WHERE lk.BacSiID = ? AND DATE(lk.ThoiGianKham) = ?
-            ORDER BY lk.ThoiGianKham ASC
-        ";
+        $startOfDay = $date . ' 00:00:00';
+        $endOfDay = $date . ' 23:59:59';
+
+        $selectClause = $withPatientDetails 
+            ? "lk.*, bn.HoTen AS TenBenhNhan, bn.NgaySinh, bn.GioiTinh"
+            : "lk.*";
+
+        $sql = "SELECT {$selectClause}
+                FROM {$this->table} AS lk";
         
-        return $this->query($sql, [$doctorId, $date])->fetchAll(\PDO::FETCH_ASSOC);
+        if ($withPatientDetails) {
+            $sql .= " JOIN benhnhan AS bn ON lk.BenhNhanID = bn.BenhNhanID";
+        }
+
+        $sql .= " WHERE lk.BacSiID = ? AND lk.ThoiGianKham BETWEEN ? AND ?
+                  ORDER BY lk.ThoiGianKham ASC";
+
+        $stmt = $this->query($sql, [$doctorId, $startOfDay, $endOfDay]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
     
     /**
@@ -67,6 +69,7 @@ class Appointment extends BaseModel
                     lk.*, 
                     bn.HoTen AS TenBenhNhan, bn.NgaySinh, bn.GioiTinh, bn.SoDienThoai AS SDTBenhNhan,
                     bs_u.HoTen AS TenBacSi
+                    
                 FROM {$this->table} AS lk
                 JOIN benhnhan AS bn ON lk.BenhNhanID = bn.BenhNhanID
                 JOIN bacsi AS bs ON lk.BacSiID = bs.BacSiID
@@ -153,7 +156,9 @@ class Appointment extends BaseModel
         $sql = "SELECT 
                     lk.LichKhamID, lk.ThoiGianKham, lk.TrangThai,
                     bn.HoTen AS TenBenhNhan,
-                    u.HoTen AS TenBacSi
+                    u.HoTen AS TenBacSi,
+                    bn.SoDienThoai AS SoDienThoaiBenhNhan
+                    
                 FROM {$this->table} AS lk
                 JOIN benhnhan AS bn ON lk.BenhNhanID = bn.BenhNhanID
                 JOIN bacsi AS bs ON lk.BacSiID = bs.BacSiID
@@ -182,6 +187,92 @@ class Appointment extends BaseModel
         $sql .= " ORDER BY lk.ThoiGianKham DESC";
 
         $stmt = $this->query($sql, $params);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Lấy danh sách lịch hẹn của một bác sĩ, có thể lọc theo trạng thái.
+     *
+     * @param int $doctorId ID của bác sĩ.
+     * @param ?string $status Trạng thái cần lọc (ví dụ: 'ChoXacNhan', 'DaHoanThanh'). Nếu null, lấy tất cả.
+     * @return array Danh sách các lịch hẹn.
+     */
+    public function getAppointmentsForDoctor(int $doctorId, ?string $status = null): array
+    {
+        $params = [$doctorId];
+        $sql = "SELECT 
+                    lk.LichKhamID, lk.ThoiGianKham, lk.TrangThai, lk.LyDoKham,
+                    bn.HoTen AS TenBenhNhan
+                FROM {$this->table} AS lk
+                JOIN benhnhan AS bn ON lk.BenhNhanID = bn.BenhNhanID
+                WHERE lk.BacSiID = ?";
+
+        if ($status) {
+            $sql .= " AND lk.TrangThai = ?";
+            $params[] = $status;
+        }
+
+        $sql .= " ORDER BY lk.ThoiGianKham DESC";
+        
+        $stmt = $this->query($sql, $params);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Lấy số lượng lịch hẹn mỗi ngày trong 7 ngày qua.
+     * @return array
+     */
+    public function getAppointmentCountLast7Days(): array
+    {
+        $sql = "SELECT DATE(ThoiGianKham) as appointment_date, COUNT(LichKhamID) as appointment_count
+                FROM {$this->table}
+                WHERE ThoiGianKham >= CURDATE() - INTERVAL 6 DAY AND ThoiGianKham < CURDATE() + INTERVAL 1 DAY
+                GROUP BY DATE(ThoiGianKham)
+                ORDER BY appointment_date ASC";
+        
+        $stmt = $this->query($sql);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Lấy các dịch vụ được sử dụng nhiều nhất.
+     * @param int $limit
+     * @return array
+     */
+    public function getTopServiceUsage(int $limit = 5): array
+    {
+        $sql = "SELECT 
+                    dd.TenDichVu, 
+                    COUNT(cdvk.ChiTietID) as usage_count
+                FROM chitietdichvukham AS cdvk
+                JOIN danhmucdichvu AS dd ON cdvk.DichVuID = dd.DichVuID
+                GROUP BY dd.TenDichVu
+                ORDER BY usage_count DESC
+                LIMIT ?";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Lấy hoạt động của các bác sĩ trong ngày hôm nay.
+     * @return array
+     */
+    public function getDoctorActivityToday(): array
+    {
+        $sql = "SELECT 
+                    u.HoTen AS TenBacSi,
+                    COUNT(lk.LichKhamID) AS SoLichHen
+                FROM {$this->table} AS lk
+                JOIN bacsi AS bs ON lk.BacSiID = bs.BacSiID
+                JOIN nguoidung AS u ON bs.UserID = u.UserID
+                WHERE DATE(lk.ThoiGianKham) = CURDATE()
+                GROUP BY u.HoTen
+                ORDER BY SoLichHen DESC";
+        
+        $stmt = $this->query($sql);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

@@ -111,4 +111,36 @@ class PatientController extends BaseController
         ]);
     }
 
+    /**
+     * Hiển thị lịch sử khám bệnh của một bệnh nhân cho bác sĩ xem.
+     *
+     * @param int $patientId ID của bệnh nhân.
+     */
+    public function showHistoryForDoctor(int $patientId)
+    {
+        // Kiểm tra đăng nhập và vai trò bác sĩ
+        if (!isset($_SESSION['user']) || $_SESSION['user']['VaiTro'] !== 'BacSi') {
+            $this->redirect('/login');
+            return;
+        }
+
+        $patientModel = new Patient();
+        $patient = $patientModel->find($patientId);
+
+        if (!$patient) {
+            // Xử lý trường hợp không tìm thấy bệnh nhân
+            die('Không tìm thấy bệnh nhân.');
+        }
+
+        $appointmentModel = new Appointment();
+        // Lấy tất cả lịch hẹn của bệnh nhân này, sắp xếp mới nhất lên đầu
+        $appointments = $appointmentModel->findAllByPatientIdWithDoctor($patientId);
+
+        $this->render('doctors/history', [
+            'title' => 'Lịch sử khám bệnh',
+            'patient' => $patient,
+            'appointments' => $appointments
+        ], 'doctor_layout');
+    }
+
 }

@@ -14,11 +14,10 @@ class AdminController extends BaseController
      */
     public function dashboard()
     {
-        // Lấy dữ liệu thống kê
         $userModel = new User();
         $patientModel = new Patient();
         $appointmentModel = new Appointment();
-
+        
         $stats = [
             'total_doctors' => $userModel->countByRole('BacSi'),
             'total_patients' => $patientModel->countAll(),
@@ -28,11 +27,19 @@ class AdminController extends BaseController
 
         $recentAppointments = $appointmentModel->getRecentAppointments(5);
 
+        // Dữ liệu cho các widget
+        $appointmentChartData = $appointmentModel->getAppointmentCountLast7Days();
+        $serviceUsageData = $appointmentModel->getTopServiceUsage(5);
+        $doctorActivityToday = $appointmentModel->getDoctorActivityToday();
+
         // Render view với layout riêng của admin
         $this->render('admin/dashboard', [
             'title' => 'Bảng điều khiển',
             'stats' => $stats,
-            'recentAppointments' => $recentAppointments
+            'recentAppointments' => $recentAppointments,
+            'appointmentChartData' => $appointmentChartData,
+            'serviceUsageData' => $serviceUsageData,
+            'doctorActivityToday' => $doctorActivityToday
         ], 'admin');
     }
 }

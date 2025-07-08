@@ -123,7 +123,7 @@ body.sb-sidenav-toggled #sidebar-wrapper .sidebar-heading {
     text-align: center;
 }
 
-/* Ghi đè style chung của các mục menu khi thu gọn */
+/* Ghi đè style chung */
 body.sb-sidenav-toggled #sidebar-wrapper .list-group-item {
     justify-content: center;
     padding: 1rem 0;
@@ -153,7 +153,7 @@ body.sb-sidenav-toggled #sidebar-wrapper .sidebar-text {
     display: none;
 }
 
-/* Căn lề lại cho icon */
+/* Căn lề cho icon */
 body.sb-sidenav-toggled #sidebar-wrapper .fa-fw {
     margin-right: 0 !important;
 }
@@ -189,4 +189,142 @@ body.sb-sidenav-toggled #sidebar-wrapper .fa-fw {
     font-size: 14px;
     font-weight: 300;
     color: #6c757d;
+}
+
+
+.caption {
+    font-size: 14px;
+    font-weight: 300;
+    color: #6c757d;
+}
+
+/* --- DASHBOARD WIDGETS & CARDS --- */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(44, 62, 80, 0.1);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1rem 1.25rem;
+}
+
+.card-header h5 {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.display-4 {
+    font-size: 2.75rem;
+}
+
+/* --- STATS CARDS --- */
+.stat-card .card-body {
+    padding: 1.5rem;
+}
+
+.stat-card .stat-icon {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.stat-card.bg-accent-1 {
+    background-color: var(--accent1);
+}
+
+.stat-card.bg-success-custom {
+    background-color: #27AE60;
+}
+
+.stat-card.bg-warning-custom {
+    background-color: #F39C12;
+}
+
+
+/* --- APPOINTMENTS TABLE --- */
+.table-dashboard thead {
+    background-color: var(--background);
+}
+
+.table-dashboard th {
+    font-weight: 500;
+    color: var(--text-dark);
+    border: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-dashboard tbody tr {
+    border-bottom: 1px solid var(--background);
+}
+
+.table-dashboard tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table-dashboard td {
+    vertical-align: middle;
+    border: none;
+}
+
+.table-dashboard .btn-action {
+    background-color: var(--background);
+    color: var(--text-dark);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.table-dashboard .btn-action:hover {
+    background-color: var(--accent1);
+    color: var(--text-light);
+}
+
+/* --- NEXT PATIENT WIDGET --- */
+.next-patient-widget .patient-avatar {
+    font-size: 4rem;
+    color: var(--accent2);
+}
+
+.next-patient-widget .patient-name {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.next-patient-widget .btn-primary {
+    background-color: var(--accent1);
+    border-color: var(--accent1);
+}
+
+.next-patient-widget .btn-primary:hover {
+    background-color: var(--accent2);
+    border-color: var(--accent2);
+}
+
+/* --- TO-DO LIST WIDGET --- */
+.todo-list .list-group-item {
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid #e9ecef;
+}
+
+.todo-list .list-group-item:first-child {
+    border-top: 0;
+}
+
+.todo-list .list-group-item:hover {
+    background-color: #f8f9fa;
 }

@@ -24,7 +24,15 @@ class AppointmentController extends BaseController
         if (!$appointment) {
             die('Không tìm thấy lịch hẹn.');
         }
+        $userRole = $_SESSION['user']['VaiTro'] ?? null;
 
+        if ($userRole === 'BacSi') {
+            // Nếu là bác sĩ, render view dành cho bác sĩ với layout của bác sĩ
+            $this->render('doctors/show', [
+                'title' => 'Chi tiết Lịch hẹn',
+                'appointment' => $appointment
+            ], 'doctor_layout');
+        } else {
         // Lấy danh mục thuốc và dịch vụ cho form
         $medicineModel = new Medicine();
         $serviceModel = new Service();
@@ -37,6 +45,7 @@ class AppointmentController extends BaseController
             'services' => $serviceModel->getAllActive(),
             'prescriptions' => $prescriptionModel->findByAppointmentId($id)
         ]);
+    }
     }
 
     /**
